@@ -1,7 +1,3 @@
-"""
-
-utils = Utils();
-
 if "__main__" == __name__:
 	from sys import argv, stderr
 	WB = XLSFile();

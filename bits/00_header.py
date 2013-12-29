@@ -1,60 +1,26 @@
 #!/usr/bin/env python
-import PyV8, base64
 
-class MyConsole(PyV8.JSClass):
-    def log(self, *args):
-        print(" ".join([str(x) for x in args]))
-    def error(self, *args):
-        print >>stderr, " ".join([str(x) for x in args])
+"""
+XLS Parser
 
-class GlobalContext(PyV8.JSClass):
-    console = MyConsole()
+This module leverages js-xls <http://oss.sheetjs.com/js-xls/>
 
-class XLSSheet:
-	def __init__(self, ws):
-		self.ws = ws;
+Requires PyV8 (javascript)
 
+Sample usage:
 
-class XLSFile:
-	def __init__(self, fname=None, b64=None):
-		self._gc = GlobalContext();
-		self.c = PyV8.JSContext(self._gc);
-		self.c.enter();
-		self.c.eval(xlsjscode);
-		if fname is not None: self.readfile(fname);
-		elif b64 is not None: self.readb64(b64);
+>>> import xls
+>>> filename = "formula_stress_test.xls" # http://oss.sheetjs.com/test_files/formula_stress_test.xls
+>>> workbook = xls.XLSFile(filename)
+>>> first_sheet_name = workbook.sheetnames(0)
+>>> print xls.utils.csvify(workbook.sheet(sheet))
 
-	def sheetnames(self, idx=None):
-		"""Returns an array of the sheet names"""
-		if idx is None: return self.wb.SheetNames[:]
-		return self.wb.SheetNames[idx]
+The supplied xls2csv.py binary generates CSV output from the XLS file.
 
-	def sheet(self, idx_or_name):
-		"""Returns a sheet object given an index or name"""
-		if isinstance(idx_or_name, int):
-			return self.sheet(self.sheetnames(idx_or_name));
-		return XLSSheet(self.wb.Sheets[idx_or_name]);
+For unported functions, the raw PyV8 object is available at `.wb`:
 
-	def readb64(self, b64):
-		self.wb = self.c.locals['XLS'].read(b64, {'type': 'base64'});
-		return self.wb;
+>>> raw_book = workbook.wb
 
-	def readfile(self, fname):
-		return self.readb64(base64.b64encode(open(fname, 'rb').read()));
+Copyright (C) 2013  SheetJS
+"""
 
-	def csvify(self, sheet):
-		return self.c.locals['XLS'].utils.sheet_to_csv(sheet.ws if isinstance(sheet, XLSSheet) else sheet);
-
-class Utils():
-	def __init__(self):
-		self._gc = GlobalContext();
-		self.c = PyV8.JSContext(self._gc);
-		self.c.enter();
-		self.c.eval(xlsjscode);
-		self._utils = self.c.locals['XLS'].utils; 
-
-	def csvify(self, sheet):
-		return self._utils.sheet_to_csv(sheet.ws if isinstance(sheet, XLSSheet) else sheet);
-
-
-xlsjscode="""

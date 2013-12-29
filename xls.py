@@ -1,14 +1,39 @@
 #!/usr/bin/env python
+
+"""
+XLS Parser
+
+This module leverages js-xls <http://oss.sheetjs.com/js-xls/>
+
+Requires PyV8 (javascript)
+
+Sample usage:
+
+>>> import xls
+>>> filename = "formula_stress_test.xls" # http://oss.sheetjs.com/test_files/formula_stress_test.xls
+>>> workbook = xls.XLSFile(filename)
+>>> first_sheet_name = workbook.sheetnames(0)
+>>> print xls.utils.csvify(workbook.sheet(sheet))
+
+The supplied xls2csv.py binary generates CSV output from the XLS file.
+
+For unported functions, the raw PyV8 object is available at `.wb`:
+
+>>> raw_book = workbook.wb
+
+Copyright (C) 2013  SheetJS
+"""
+
 import PyV8, base64
 
-class MyConsole(PyV8.JSClass):
+class _MyConsole(PyV8.JSClass):
     def log(self, *args):
         print(" ".join([str(x) for x in args]))
     def error(self, *args):
         print >>stderr, " ".join([str(x) for x in args])
 
 class GlobalContext(PyV8.JSClass):
-    console = MyConsole()
+    console = _MyConsole()
 
 class XLSSheet:
 	def __init__(self, ws):

@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
 	name='xls',
-	version='0.0.2',
+	version='0.0.4',
 	author='SheetJS',
 	author_email='dev@sheetjs.com',
 	url='https://github.com/SheetJS/py-xls',
@@ -13,6 +13,7 @@ setup(
 """,
 	platforms = ["Any platform that supports PyV8"],
 	requires=['PyV8'],
+	install_requires=['PyV8'],
 	py_modules=['xls'],
 	scripts = [
 		'scripts/xls2csv.py'
