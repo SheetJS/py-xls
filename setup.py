@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
 	name='xls',
-	version='0.0.4',
+	version='0.1.0',
 	author='SheetJS',
 	author_email='dev@sheetjs.com',
 	url='https://github.com/SheetJS/py-xls',
